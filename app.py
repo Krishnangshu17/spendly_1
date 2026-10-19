@@ -2,10 +2,18 @@ import sqlite3
 
 from flask import Flask, redirect, render_template, request, session, url_for
 
-from database.db import create_user, init_db, seed_db, verify_user
+from database.db import create_user, get_user_by_id, init_db, seed_db, verify_user
 
 app = Flask(__name__)
 app.secret_key = "dev-secret-key-change-in-production"
+
+
+@app.context_processor
+def inject_current_user():
+    user_id = session.get("user_id")
+    if user_id is None:
+        return {"current_user": None}
+    return {"current_user": get_user_by_id(user_id)}
 
 with app.app_context():
     init_db()
