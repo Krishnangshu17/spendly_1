@@ -1,9 +1,20 @@
 import sqlite3
-from datetime import datetime
 
 from flask import Flask, redirect, render_template, request, session, url_for
 
-from database.db import create_user, get_user_by_id, init_db, seed_db, verify_user
+from database.db import (
+    create_user,
+    get_user_by_id as get_user_row,
+    init_db,
+    seed_db,
+    verify_user,
+)
+from database.queries import (
+    get_category_breakdown,
+    get_recent_transactions,
+    get_summary_stats,
+    get_user_by_id,
+)
 
 app = Flask(__name__)
 app.secret_key = "dev-secret-key-change-in-production"
@@ -14,7 +25,7 @@ def inject_current_user():
     user_id = session.get("user_id")
     if user_id is None:
         return {"current_user": None}
-    return {"current_user": get_user_by_id(user_id)}
+    return {"current_user": get_user_row(user_id)}
 
 with app.app_context():
     init_db()
@@ -107,13 +118,15 @@ def profile():
         return redirect(url_for("login"))
 
     user = get_user_by_id(user_id)
-    member_since = datetime.strptime(
-        user["created_at"], "%Y-%m-%d %H:%M:%S"
-    ).strftime("%d %b %Y")
     initials = "".join(part[0].upper() for part in user["name"].split()[:2])
 
     return render_template(
-        "profile.html", user=user, member_since=member_since, initials=initials
+        "profile.html",
+        user=user,
+        initials=initials,
+        stats=get_summary_stats(user_id),
+        transactions=get_recent_transactions(user_id),
+        categories=get_category_breakdown(user_id),
     )
 
 

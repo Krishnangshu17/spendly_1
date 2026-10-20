@@ -15,22 +15,22 @@
             <div class="profile-identity-info">
                 <h1 class="profile-name">{{ user['name'] }}</h1>
                 <p class="profile-email">{{ user['email'] }}</p>
-                <p class="profile-member-since">Member since {{ member_since }}</p>
+                <p class="profile-member-since">Member since {{ user['member_since'] }}</p>
             </div>
         </div>
 
         <div class="profile-stats">
             <div class="stat-card">
                 <span class="stat-label">Total Spent</span>
-                <span class="stat-value">₹12,450.75</span>
+                <span class="stat-value">₹{{ "%.2f"|format(stats.total_spent) }}</span>
             </div>
             <div class="stat-card">
                 <span class="stat-label">Transactions</span>
-                <span class="stat-value">8</span>
+                <span class="stat-value">{{ stats.transaction_count }}</span>
             </div>
             <div class="stat-card">
                 <span class="stat-label">Top Category</span>
-                <span class="stat-value">Food</span>
+                <span class="stat-value">{{ stats.top_category }}</span>
             </div>
         </div>
 
@@ -48,36 +48,14 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for t in transactions %}
                             <tr>
-                                <td>12 Apr 2025</td>
-                                <td>Groceries</td>
-                                <td><span class="pill pill-food">Food</span></td>
-                                <td class="col-amount">₹850.00</td>
+                                <td>{{ t.date }}</td>
+                                <td>{{ t.description }}</td>
+                                <td><span class="pill pill-{{ t.category|lower }}">{{ t.category }}</span></td>
+                                <td class="col-amount">₹{{ "%.2f"|format(t.amount) }}</td>
                             </tr>
-                            <tr>
-                                <td>11 Apr 2025</td>
-                                <td>Metro card recharge</td>
-                                <td><span class="pill pill-transport">Transport</span></td>
-                                <td class="col-amount">₹500.00</td>
-                            </tr>
-                            <tr>
-                                <td>10 Apr 2025</td>
-                                <td>Electricity bill</td>
-                                <td><span class="pill pill-bills">Bills</span></td>
-                                <td class="col-amount">₹2,200.00</td>
-                            </tr>
-                            <tr>
-                                <td>09 Apr 2025</td>
-                                <td>Doctor visit</td>
-                                <td><span class="pill pill-health">Health</span></td>
-                                <td class="col-amount">₹800.00</td>
-                            </tr>
-                            <tr>
-                                <td>08 Apr 2025</td>
-                                <td>Netflix subscription</td>
-                                <td><span class="pill pill-entertainment">Entertainment</span></td>
-                                <td class="col-amount">₹649.00</td>
-                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -86,69 +64,17 @@
             <div class="profile-card profile-panel">
                 <h2 class="profile-panel-title">By Category</h2>
                 <div class="category-list">
+                    {% for c in categories %}
                     <div class="category-row">
                         <div class="category-row-top">
-                            <span class="category-name">Shopping</span>
-                            <span class="category-amount">₹3,200.00</span>
+                            <span class="category-name">{{ c.name }}</span>
+                            <span class="category-amount">₹{{ "%.2f"|format(c.amount) }}</span>
                         </div>
                         <div class="category-bar-track">
-                            <div class="category-bar-fill cat-shopping" style="width: 100%;"></div>
+                            <div class="category-bar-fill cat-{{ c.name|lower }}" style="width: {{ c.pct }}%;"></div>
                         </div>
                     </div>
-                    <div class="category-row">
-                        <div class="category-row-top">
-                            <span class="category-name">Other</span>
-                            <span class="category-amount">₹2,801.75</span>
-                        </div>
-                        <div class="category-bar-track">
-                            <div class="category-bar-fill cat-other" style="width: 87.6%;"></div>
-                        </div>
-                    </div>
-                    <div class="category-row">
-                        <div class="category-row-top">
-                            <span class="category-name">Food</span>
-                            <span class="category-amount">₹2,300.00</span>
-                        </div>
-                        <div class="category-bar-track">
-                            <div class="category-bar-fill cat-food" style="width: 71.9%;"></div>
-                        </div>
-                    </div>
-                    <div class="category-row">
-                        <div class="category-row-top">
-                            <span class="category-name">Bills</span>
-                            <span class="category-amount">₹2,200.00</span>
-                        </div>
-                        <div class="category-bar-track">
-                            <div class="category-bar-fill cat-bills" style="width: 68.75%;"></div>
-                        </div>
-                    </div>
-                    <div class="category-row">
-                        <div class="category-row-top">
-                            <span class="category-name">Health</span>
-                            <span class="category-amount">₹800.00</span>
-                        </div>
-                        <div class="category-bar-track">
-                            <div class="category-bar-fill cat-health" style="width: 25%;"></div>
-                        </div>
-                    </div>
-                    <div class="category-row">
-                        <div class="category-row-top">
-                            <span class="category-name">Entertainment</span>
-                            <span class="category-amount">₹649.00</span>
-                        </div>
-                        <div class="category-bar-track">
-                            <div class="category-bar-fill cat-entertainment" style="width: 20.3%;"></div>
-                        </div>
-                    </div>
-                    <div class="category-row">
-                        <div class="category-row-top">
-                            <span class="category-name">Transport</span>
-                            <span class="category-amount">₹500.00</span>
-                        </div>
-                        <div class="category-bar-track">
-                            <div class="category-bar-fill cat-transport" style="width: 15.6%;"></div>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
