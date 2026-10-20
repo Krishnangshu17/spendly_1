@@ -109,9 +109,12 @@ def profile():
     user = get_user_by_id(user_id)
     member_since = datetime.strptime(
         user["created_at"], "%Y-%m-%d %H:%M:%S"
-    ).strftime("%B %Y")
+    ).strftime("%d %b %Y")
+    initials = "".join(part[0].upper() for part in user["name"].split()[:2])
 
-    return render_template("profile.html", user=user, member_since=member_since)
+    return render_template(
+        "profile.html", user=user, member_since=member_since, initials=initials
+    )
 
 
 @app.route("/expenses/add")

@@ -1,76 +1,193 @@
 .profile-section {
-    min-height: calc(100vh - 60px - 100px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 3rem 2rem;
+    padding: 3rem 2rem 5rem;
 }
 
 .profile-container {
-    width: 100%;
-    max-width: var(--auth-width);
-}
-
-.profile-header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-.profile-title {
-    font-family: var(--font-display);
-    font-size: 2rem;
-    color: var(--ink);
-    margin-bottom: 0.5rem;
-}
-
-.profile-subtitle {
-    font-size: 0.9rem;
-    color: var(--ink-muted);
+    max-width: var(--max-width);
+    margin: 0 auto;
 }
 
 .profile-card {
     background: var(--paper-card);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    padding: 2rem;
 }
 
-.profile-row {
+/* Identity card */
+
+.profile-identity {
     display: flex;
     align-items: center;
-    gap: 0.9rem;
-    padding: 1rem 0;
+    gap: 1.5rem;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
 }
 
-.profile-row + .profile-row {
-    border-top: 1px solid var(--border-soft);
+.profile-avatar {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 1.4rem;
 }
 
-.profile-field {
+.profile-name {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--ink);
+    margin-bottom: 0.3rem;
+}
+
+.profile-email {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    margin-bottom: 0.3rem;
+}
+
+.profile-member-since {
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+}
+
+/* Stat cards */
+
+.profile-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
+    gap: 0.6rem;
 }
 
-.profile-label {
-    font-size: 0.8rem;
+.stat-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     color: var(--ink-muted);
 }
 
-.profile-value {
-    font-size: 1rem;
+.stat-value {
+    font-family: var(--font-display);
+    font-size: 1.9rem;
+    color: var(--ink);
+}
+
+/* Transactions + category panels */
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.profile-panel {
+    padding: 1.75rem;
+}
+
+.profile-panel-title {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+}
+
+.transactions-table-wrap {
+    overflow-x: auto;
+}
+
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.transactions-table th {
+    text-align: left;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-soft);
+    white-space: nowrap;
+}
+
+.transactions-table td {
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    white-space: nowrap;
+}
+
+.transactions-table tr:last-child td {
+    border-bottom: none;
+}
+
+.col-amount {
+    text-align: right;
     color: var(--ink);
     font-weight: 500;
 }
 
-.icon {
-    width: 18px;
-    height: 18px;
-    stroke-width: 1.5;
-    color: var(--ink-muted);
-    flex-shrink: 0;
+/* Category breakdown */
+
+.category-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
 }
 
-/* No @media rules: the card is a single narrow column
-   (max-width: var(--auth-width) = 440px) that already stacks
-   vertically, so nothing needs to change at 900px or 600px. */
+.category-row-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.4rem;
+    font-size: 0.88rem;
+}
+
+.category-name {
+    color: var(--ink-soft);
+    font-weight: 500;
+}
+
+.category-amount {
+    color: var(--ink-muted);
+}
+
+.category-bar-track {
+    height: 6px;
+    border-radius: 999px;
+    background: var(--border-soft);
+    overflow: hidden;
+}
+
+.category-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+}
+
+.cat-food { background: var(--accent); }
+.cat-transport,
+.cat-shopping { background: var(--accent-2); }
+.cat-bills { background: var(--cat-blue); }
+.cat-health { background: var(--danger); }
+.cat-entertainment { background: var(--cat-purple); }
+.cat-other { background: var(--ink-faint); }

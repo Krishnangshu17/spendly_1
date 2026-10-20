@@ -9,41 +9,150 @@
 {% block content %}
 <section class="profile-section">
     <div class="profile-container">
-        <div class="profile-header">
-            <h1 class="profile-title">Your Profile</h1>
-            <p class="profile-subtitle">Account details and membership info</p>
-        </div>
 
-        <div class="profile-card">
-            <div class="profile-row">
-                <i data-lucide="user" class="icon"></i>
-                <div class="profile-field">
-                    <span class="profile-label">Name</span>
-                    <span class="profile-value">{{ user['name'] }}</span>
-                </div>
-            </div>
-
-            <div class="profile-row">
-                <i data-lucide="mail" class="icon"></i>
-                <div class="profile-field">
-                    <span class="profile-label">Email</span>
-                    <span class="profile-value">{{ user['email'] }}</span>
-                </div>
-            </div>
-
-            <div class="profile-row">
-                <i data-lucide="calendar" class="icon"></i>
-                <div class="profile-field">
-                    <span class="profile-label">Member since</span>
-                    <span class="profile-value">{{ member_since }}</span>
-                </div>
+        <div class="profile-card profile-identity">
+            <div class="profile-avatar">{{ initials }}</div>
+            <div class="profile-identity-info">
+                <h1 class="profile-name">{{ user['name'] }}</h1>
+                <p class="profile-email">{{ user['email'] }}</p>
+                <p class="profile-member-since">Member since {{ member_since }}</p>
             </div>
         </div>
+
+        <div class="profile-stats">
+            <div class="stat-card">
+                <span class="stat-label">Total Spent</span>
+                <span class="stat-value">₹12,450.75</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Transactions</span>
+                <span class="stat-value">8</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Top Category</span>
+                <span class="stat-value">Food</span>
+            </div>
+        </div>
+
+        <div class="profile-grid">
+            <div class="profile-card profile-panel">
+                <h2 class="profile-panel-title">Recent Transactions</h2>
+                <div class="transactions-table-wrap">
+                    <table class="transactions-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th class="col-amount">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>12 Apr 2025</td>
+                                <td>Groceries</td>
+                                <td><span class="pill pill-food">Food</span></td>
+                                <td class="col-amount">₹850.00</td>
+                            </tr>
+                            <tr>
+                                <td>11 Apr 2025</td>
+                                <td>Metro card recharge</td>
+                                <td><span class="pill pill-transport">Transport</span></td>
+                                <td class="col-amount">₹500.00</td>
+                            </tr>
+                            <tr>
+                                <td>10 Apr 2025</td>
+                                <td>Electricity bill</td>
+                                <td><span class="pill pill-bills">Bills</span></td>
+                                <td class="col-amount">₹2,200.00</td>
+                            </tr>
+                            <tr>
+                                <td>09 Apr 2025</td>
+                                <td>Doctor visit</td>
+                                <td><span class="pill pill-health">Health</span></td>
+                                <td class="col-amount">₹800.00</td>
+                            </tr>
+                            <tr>
+                                <td>08 Apr 2025</td>
+                                <td>Netflix subscription</td>
+                                <td><span class="pill pill-entertainment">Entertainment</span></td>
+                                <td class="col-amount">₹649.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="profile-card profile-panel">
+                <h2 class="profile-panel-title">By Category</h2>
+                <div class="category-list">
+                    <div class="category-row">
+                        <div class="category-row-top">
+                            <span class="category-name">Shopping</span>
+                            <span class="category-amount">₹3,200.00</span>
+                        </div>
+                        <div class="category-bar-track">
+                            <div class="category-bar-fill cat-shopping" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <div class="category-row">
+                        <div class="category-row-top">
+                            <span class="category-name">Other</span>
+                            <span class="category-amount">₹2,801.75</span>
+                        </div>
+                        <div class="category-bar-track">
+                            <div class="category-bar-fill cat-other" style="width: 87.6%;"></div>
+                        </div>
+                    </div>
+                    <div class="category-row">
+                        <div class="category-row-top">
+                            <span class="category-name">Food</span>
+                            <span class="category-amount">₹2,300.00</span>
+                        </div>
+                        <div class="category-bar-track">
+                            <div class="category-bar-fill cat-food" style="width: 71.9%;"></div>
+                        </div>
+                    </div>
+                    <div class="category-row">
+                        <div class="category-row-top">
+                            <span class="category-name">Bills</span>
+                            <span class="category-amount">₹2,200.00</span>
+                        </div>
+                        <div class="category-bar-track">
+                            <div class="category-bar-fill cat-bills" style="width: 68.75%;"></div>
+                        </div>
+                    </div>
+                    <div class="category-row">
+                        <div class="category-row-top">
+                            <span class="category-name">Health</span>
+                            <span class="category-amount">₹800.00</span>
+                        </div>
+                        <div class="category-bar-track">
+                            <div class="category-bar-fill cat-health" style="width: 25%;"></div>
+                        </div>
+                    </div>
+                    <div class="category-row">
+                        <div class="category-row-top">
+                            <span class="category-name">Entertainment</span>
+                            <span class="category-amount">₹649.00</span>
+                        </div>
+                        <div class="category-bar-track">
+                            <div class="category-bar-fill cat-entertainment" style="width: 20.3%;"></div>
+                        </div>
+                    </div>
+                    <div class="category-row">
+                        <div class="category-row-top">
+                            <span class="category-name">Transport</span>
+                            <span class="category-amount">₹500.00</span>
+                        </div>
+                        <div class="category-bar-track">
+                            <div class="category-bar-fill cat-transport" style="width: 15.6%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </section>
-{% endblock %}
-
-{% block scripts %}
-<script src="https://unpkg.com/lucide@latest"></script>
-<script>lucide.createIcons();</script>
 {% endblock %}
