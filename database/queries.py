@@ -22,31 +22,54 @@ def get_user_by_id(user_id):
     return {"name": row["name"], "email": row["email"], "member_since": member_since}
 
 
-def get_summary_stats(user_id):
+def get_summary_stats(user_id, start_date=None, end_date=None):
     """Returns dict with total_spent, transaction_count, top_category."""
     conn = get_db()
     try:
-        totals_row = conn.execute(
-            """
-            SELECT COALESCE(SUM(amount), 0) AS total_spent,
-                   COUNT(*) AS transaction_count
-            FROM expenses
-            WHERE user_id = ?
-            """,
-            (user_id,),
-        ).fetchone()
+        if start_date and end_date:
+            totals_row = conn.execute(
+                """
+                SELECT COALESCE(SUM(amount), 0) AS total_spent,
+                       COUNT(*) AS transaction_count
+                FROM expenses
+                WHERE user_id = ? AND date BETWEEN ? AND ?
+                """,
+                (user_id, start_date, end_date),
+            ).fetchone()
 
-        top_category_row = conn.execute(
-            """
-            SELECT category
-            FROM expenses
-            WHERE user_id = ?
-            GROUP BY category
-            ORDER BY SUM(amount) DESC
-            LIMIT 1
-            """,
-            (user_id,),
-        ).fetchone()
+            top_category_row = conn.execute(
+                """
+                SELECT category
+                FROM expenses
+                WHERE user_id = ? AND date BETWEEN ? AND ?
+                GROUP BY category
+                ORDER BY SUM(amount) DESC
+                LIMIT 1
+                """,
+                (user_id, start_date, end_date),
+            ).fetchone()
+        else:
+            totals_row = conn.execute(
+                """
+                SELECT COALESCE(SUM(amount), 0) AS total_spent,
+                       COUNT(*) AS transaction_count
+                FROM expenses
+                WHERE user_id = ?
+                """,
+                (user_id,),
+            ).fetchone()
+
+            top_category_row = conn.execute(
+                """
+                SELECT category
+                FROM expenses
+                WHERE user_id = ?
+                GROUP BY category
+                ORDER BY SUM(amount) DESC
+                LIMIT 1
+                """,
+                (user_id,),
+            ).fetchone()
     finally:
         conn.close()
 
@@ -59,30 +82,46 @@ def get_summary_stats(user_id):
     }
 
 
-def get_recent_transactions(user_id, limit=10):
+def get_recent_transactions(user_id, limit=10, start_date=None, end_date=None):
     """Returns list of dicts with date, description, category, amount (newest first)."""
     conn = get_db()
     try:
-        rows = conn.execute(
-            "SELECT date, description, category, amount FROM expenses "
-            "WHERE user_id = ? ORDER BY date DESC, id DESC LIMIT ?",
-            (user_id, limit),
-        ).fetchall()
+        if start_date and end_date:
+            rows = conn.execute(
+                "SELECT date, description, category, amount FROM expenses "
+                "WHERE user_id = ? AND date BETWEEN ? AND ? "
+                "ORDER BY date DESC, id DESC LIMIT ?",
+                (user_id, start_date, end_date, limit),
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                "SELECT date, description, category, amount FROM expenses "
+                "WHERE user_id = ? ORDER BY date DESC, id DESC LIMIT ?",
+                (user_id, limit),
+            ).fetchall()
     finally:
         conn.close()
 
     return [dict(row) for row in rows]
 
 
-def get_category_breakdown(user_id):
+def get_category_breakdown(user_id, start_date=None, end_date=None):
     """Returns list of dicts with name, amount, pct (ints summing to 100)."""
     conn = get_db()
     try:
-        rows = conn.execute(
-            "SELECT category, SUM(amount) AS total FROM expenses "
-            "WHERE user_id = ? GROUP BY category ORDER BY total DESC",
-            (user_id,),
-        ).fetchall()
+        if start_date and end_date:
+            rows = conn.execute(
+                "SELECT category, SUM(amount) AS total FROM expenses "
+                "WHERE user_id = ? AND date BETWEEN ? AND ? "
+                "GROUP BY category ORDER BY total DESC",
+                (user_id, start_date, end_date),
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                "SELECT category, SUM(amount) AS total FROM expenses "
+                "WHERE user_id = ? GROUP BY category ORDER BY total DESC",
+                (user_id,),
+            ).fetchall()
     finally:
         conn.close()
 

@@ -171,4 +171,4 @@ than "this is wrong."
 - **Plain language**: students are comfortable with 
   code but new to thinking about maintainability. 
   Explain *why* something matters, not just *what's* 
-  off.
+  off.  

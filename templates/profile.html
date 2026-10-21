@@ -19,6 +19,39 @@
             </div>
         </div>
 
+        <div class="profile-card profile-filterbar">
+            <div class="filter-tabs" role="group" aria-label="Date range">
+                <a href="{{ url_for('profile', range='all_time') }}"
+                   class="filter-tab{% if selected_range == 'all_time' %} active{% endif %}">All Time</a>
+                <a href="{{ url_for('profile', range='this_month') }}"
+                   class="filter-tab{% if selected_range == 'this_month' %} active{% endif %}">This Month</a>
+                <a href="{{ url_for('profile', range='last_30_days') }}"
+                   class="filter-tab{% if selected_range == 'last_30_days' %} active{% endif %}">Last 30 Days</a>
+                <button type="button"
+                        class="filter-tab filter-custom-toggle{% if selected_range == 'custom' %} active{% endif %}"
+                        data-custom-toggle
+                        aria-expanded="{{ 'true' if selected_range == 'custom' else 'false' }}">
+                    Custom Range
+                </button>
+            </div>
+            <form method="get" action="{{ url_for('profile') }}"
+                  class="filter-custom-form" data-custom-form
+                  data-active="{{ 'true' if selected_range == 'custom' else 'false' }}">
+                <input type="hidden" name="range" value="custom">
+                <label class="filter-date-field">
+                    <span class="filter-date-label">From</span>
+                    <input type="date" name="start_date" class="form-input filter-date-input"
+                           value="{{ start_date if selected_range == 'custom' else '' }}">
+                </label>
+                <label class="filter-date-field">
+                    <span class="filter-date-label">To</span>
+                    <input type="date" name="end_date" class="form-input filter-date-input"
+                           value="{{ end_date if selected_range == 'custom' else '' }}">
+                </label>
+                <button type="submit" class="btn-primary filter-apply-btn">Apply</button>
+            </form>
+        </div>
+
         <div class="profile-stats">
             <div class="stat-card">
                 <span class="stat-label">Total Spent</span>
