@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import date, datetime, timedelta
 
 from flask import Flask, redirect, render_template, request, session, url_for
 
@@ -30,6 +31,44 @@ def inject_current_user():
 with app.app_context():
     init_db()
     seed_db()
+
+
+VALID_RANGES = {"all_time", "this_month", "last_30_days", "custom"}
+
+
+def resolve_date_range(range_value, start_date_str, end_date_str, today=None):
+    """Resolve raw query-string filter params into validated query bounds.
+
+    Returns a (effective_range, start_date, end_date) tuple. start_date/
+    end_date are ISO 'YYYY-MM-DD' strings (inclusive bounds) or None when
+    effective_range is 'all_time'. Any unrecognized range value, malformed
+    date, or end_date before start_date silently falls back to
+    ('all_time', None, None) — this function never raises.
+    """
+    if today is None:
+        today = date.today()
+
+    if range_value not in VALID_RANGES or range_value == "all_time":
+        return "all_time", None, None
+
+    if range_value == "this_month":
+        start = today.replace(day=1)
+        return "this_month", start.isoformat(), today.isoformat()
+
+    if range_value == "last_30_days":
+        start = today - timedelta(days=29)
+        return "last_30_days", start.isoformat(), today.isoformat()
+
+    try:
+        start = datetime.strptime(start_date_str, "%Y-%m-%d").date()
+        end = datetime.strptime(end_date_str, "%Y-%m-%d").date()
+    except (TypeError, ValueError):
+        return "all_time", None, None
+
+    if end < start:
+        return "all_time", None, None
+
+    return "custom", start.isoformat(), end.isoformat()
 
 
 # ------------------------------------------------------------------ #
@@ -120,13 +159,26 @@ def profile():
     user = get_user_by_id(user_id)
     initials = "".join(part[0].upper() for part in user["name"].split()[:2])
 
+    selected_range, start_date, end_date = resolve_date_range(
+        request.args.get("range", "all_time"),
+        request.args.get("start_date"),
+        request.args.get("end_date"),
+    )
+
     return render_template(
         "profile.html",
         user=user,
         initials=initials,
-        stats=get_summary_stats(user_id),
-        transactions=get_recent_transactions(user_id),
-        categories=get_category_breakdown(user_id),
+        stats=get_summary_stats(user_id, start_date=start_date, end_date=end_date),
+        transactions=get_recent_transactions(
+            user_id, start_date=start_date, end_date=end_date
+        ),
+        categories=get_category_breakdown(
+            user_id, start_date=start_date, end_date=end_date
+        ),
+        selected_range=selected_range,
+        start_date=start_date,
+        end_date=end_date,
     )
 
 
